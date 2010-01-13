@@ -45,7 +45,7 @@ public class Encryption
 			
 			keygen = KeyGenerator.getInstance("AES");
 			SecretKey aesKey = keygen.generateKey();
-
+			
 			// Chiffrement du fichier
 			// Initialize the cipher for encryption
 			aesCipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");    
@@ -53,16 +53,29 @@ public class Encryption
 			
 			byte[] buf_crypt = aesCipher.doFinal(buffer);
 
-			FileOutputStream envfos = new FileOutputStream("chaine_chiffree");
+			
+			/*
+			 * IMPORTANT
+			 * http://www.herongyang.com/JDK/Secret-Key-Test-Program-JceSecretKeyTest.html
+			 */
+			
+			
+			FileOutputStream envfos = new FileOutputStream("C:\\test_chiffré.log");
 			envfos.write(buf_crypt);
 			envfos.close();
+			
+			byte[] kb = aesKey.getEncoded();
+			
+			FileOutputStream keyStream = new FileOutputStream("C:\\key.txt");
+			keyStream.write(kb);
+			keyStream.close();
 
 			// Déchiffrement du fichier
 			aesCipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");    
 			aesCipher.init(Cipher.DECRYPT_MODE, aesKey, salt);
 			byte[] buf_decrypt = aesCipher.doFinal(buf_crypt);
 
-			envfos = new FileOutputStream("C:\\test.log");
+			envfos = new FileOutputStream("C:\\test_déchiffré.log");
 			envfos.write(buf_decrypt);
 			envfos.close();
 		} 
